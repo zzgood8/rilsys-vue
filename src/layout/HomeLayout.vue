@@ -98,7 +98,7 @@ export default defineComponent({
 
     const itemClick = (item: any) => {
       console.log(item.key)
-      router.replace(item.key)
+      // router.replace(item.key)
     }
 
     return {

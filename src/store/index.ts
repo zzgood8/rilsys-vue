@@ -20,13 +20,10 @@ const basePermission = ():Set<string> => {
 const addRouterByPermission = (routeRaw:Array<RouteRecordRaw>, permission:any):Array<RouteRecordRaw> => {
   const res:Array<RouteRecordRaw> = []
   routeRaw.forEach(item => {
-    console.log(item.path)
     if (permission.indexOf(item.path) !== -1 || item.path === '/') {
       if (item.children) {
-        console.log(addRouterByPermission(item.children, permission))
         item.children = addRouterByPermission(item.children, permission)
       }
-      console.log(item)
       res.push(item)
     }
   })
@@ -37,7 +34,8 @@ const addRouterByPermission = (routeRaw:Array<RouteRecordRaw>, permission:any):A
 export default createStore({
   state: {
     userToken: localStorage.getItem('userToken') ? localStorage.getItem('userToken') : '',
-    permission: basePermission()
+    permission: basePermission(),
+    hasPermission: false
   },
   getters: {
     getUserToken (state): string|null {
@@ -45,6 +43,9 @@ export default createStore({
     },
     getUserPermission (state):Set<string> {
       return state.permission
+    },
+    hasPermission (state): boolean {
+      return state.hasPermission
     }
   },
   mutations: {
@@ -60,6 +61,9 @@ export default createStore({
       addRouterByPermission(asyncRoutes, permission).forEach(item => {
         router.addRoute(item)
       })
+    },
+    setHasPermission (state, has: boolean) {
+      state.hasPermission = has
     }
   },
   actions: {

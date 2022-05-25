@@ -1,13 +1,13 @@
 import store from './store'
 import router from './router'
 import { apiGetUserPermission } from '@/api/user'
+import { message } from 'ant-design-vue'
 
 /**
  * 导航守卫
  * 页面跳转鉴权
  */
 router.beforeEach(async (to, from, next) => {
-  console.log(to)
   // 去登陆页直接放行
   if (to.path === '/login') {
     console.log('去登陆页')
@@ -18,37 +18,30 @@ router.beforeEach(async (to, from, next) => {
   // 没有用户凭证,跳转至登录页
   const token = store.getters.getUserToken
   if (!token) {
-    console.log('用户凭证')
+    message.error('无法获取登录凭证,请登录!!!')
     next('/login')
     return
   }
 
-  // 没有权限,通过异步获取一次权限,如果还没有,返回空,不做任何路由动作
-  const permission:Set<string> = store.getters.getPermission
-
-  if (permission.size === 4) {
-    console.log('获取权限')
-    
-    next(to.fullPath)
-  }
-  console.log(permission)
-
-  // 判断是否有权限访问页面,如果没有,返回空,不做任何路由动作
-  if (!permission.has(to.path)) {
-    // 尝试获取一次权限
-    await getUserPermission()
-    permission = store.getters.getUserPermission
-    if (!permission.has(to.path)) {
-      next('/403')
+  // 判断是否获取过权限,如果没有,则获取
+  const has = store.getters.hasPermission
+  if (!has) {
+    const res = await getUserPermission()
+    if (res === -1) {
+      message.error('登录凭证已过期,请重新登录!!!')
+      next('/login')
     } else {
       next(to.fullPath)
     }
-
-    
     return
   }
 
-  console.log('我要放行了')
+  // 获取当前用户权限,如果没有则跳转403
+  const permission = store.getters.getUserPermission
+  if (!permission.has(to.path)) {
+    next('/403')
+    return
+  }
   // 放行
   next()
 })
@@ -56,14 +49,18 @@ router.beforeEach(async (to, from, next) => {
 /**
  * 异步请求获取权限,写入store
  * 如果错误,删除用户的token
+ * -1 表示凭证失效,code = 403
+ * 0 表示无权限访问,code = 401
+ * 1 表示成功获取权限,code = 200
  */
 const getUserPermission = async () => {
-  console.log('获取权限中...')
   await apiGetUserPermission().then(res => {
     store.commit('setUserPermission', res.data)
   }).catch(err => {
     store.commit('setUserToken', '')
     console.log(err)
+  }).finally(() => {
+    store.commit('setHasPermission', true)
   })
-  console.log('获取权限完成...')
+  return 1
 }

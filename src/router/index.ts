@@ -4,10 +4,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    redirect: '/home'
-  },
-  {
-    path: '/',
     component: () => import('@/layout/BaseLayout.vue'),
     children: [
       {
@@ -25,10 +21,6 @@ export const routes: Array<RouteRecordRaw> = [
       {
         path: '/404',
         component: () => import('@/views/BasePage404.vue')
-      },
-      {
-        path: '/:pathMatch(.*)*',
-        redirect: '/404'
       }
     ]
   }
@@ -42,7 +34,7 @@ export const routes: Array<RouteRecordRaw> = [
 export const asyncRoutes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    // redirect: '/home',
+    redirect: '/home',
     component: () => import('@/layout/HomeLayout.vue'),
     children: [
       {

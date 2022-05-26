@@ -15,7 +15,7 @@ http.interceptors.request.use(config => {
 
 http.interceptors.response.use(res => {
   if (res.data.code === 200) {
-    return res.data
+    return res
   } else {
     console.log(res)
   }

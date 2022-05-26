@@ -50,9 +50,8 @@ const formState = reactive<FormState>({
 const onFinish = (values: any) => {
   formState.loginState = true
   apiLogin(values).then(res => {
-    console.log(res)
-    store.commit('setUserToken', res.data)
-    localStorage.setItem('userToken', res.data)
+    // store.commit('setUserToken', res.data.data)
+    localStorage.setItem('token', res.data.data)
     // router.push('/home')
   }).catch(err => {
     console.log(err)

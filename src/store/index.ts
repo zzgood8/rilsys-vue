@@ -6,7 +6,7 @@ export default createStore({
     // 用户令牌
     token: localStorage.getItem('token') ? localStorage.getItem('userToken') : '',
     // 权限列表
-    authority: [],
+    authority: []
   },
   getters: {
     getToken (state) {

@@ -4,6 +4,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 export const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
+    redirect: '/home',
     component: () => import('@/layout/BaseLayout.vue'),
     children: [
       {
@@ -24,10 +25,6 @@ export const routes: Array<RouteRecordRaw> = [
       }
     ]
   }
-  // {
-  //   path: '/:pathMatch(.*)*',
-  //   redirect: '/404'
-  // }
 ]
 
 // 异步路由,通过鉴权动态添加

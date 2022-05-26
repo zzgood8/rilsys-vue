@@ -33,7 +33,7 @@
 import { reactive, computed } from 'vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { apiLogin } from '@/api/user'
-import store from '@/store/index'
+import router from '@/router'
 
 interface FormState {
   username: string;
@@ -50,9 +50,8 @@ const formState = reactive<FormState>({
 const onFinish = (values: any) => {
   formState.loginState = true
   apiLogin(values).then(res => {
-    // store.commit('setUserToken', res.data.data)
     localStorage.setItem('token', res.data.data)
-    // router.push('/home')
+    router.replace('/home')
   }).catch(err => {
     console.log(err)
   }).finally(() => {

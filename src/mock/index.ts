@@ -17,8 +17,7 @@ Mock.mock('http://localhost:8888/api/systemUser/getPermission', 'get', {
   code: 200,
   msg: 'ok',
   data: [
-    '/home',
-    '/home/index'
+    '/home'
   ]
 })
 

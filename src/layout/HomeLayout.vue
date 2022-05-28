@@ -1,5 +1,5 @@
 <template>
-  <a-layout style="height: 100vh">
+  <a-layout style="height: 100%;min-height: 100vh;">
     <a-layout-sider v-model:collapsed="state.collapsed" :trigger="null" collapsible>
       <div class="logo" />
       <a-menu :open-keys="state.openKeys" @click="itemClick" @openChange="onOpenChange" v-model:selectedKeys="state.selectedKeys"

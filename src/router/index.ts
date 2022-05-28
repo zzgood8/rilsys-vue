@@ -67,7 +67,7 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
             }
           },
           {
-            path:'/config/permission',
+            path: '/config/permission',
             component: () => import('@/views/home/HomeIndex.vue'),
             meta: {
               title: '权限管理',

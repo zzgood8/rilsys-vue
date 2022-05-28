@@ -1,11 +1,21 @@
 <template>
   <a-layout style="height: 100vh">
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+    <a-layout-sider v-model:collapsed="state.collapsed" :trigger="null" collapsible>
       <div class="logo" />
-      <a-menu :open-keys="openKeys" @click="itemClick" @openChange="onOpenChange" v-model:selectedKeys="selectedKeys"
+      <a-menu :open-keys="state.openKeys" @click="itemClick" @openChange="onOpenChange" v-model:selectedKeys="state.selectedKeys"
         theme="dark" mode="inline">
-        <a-menu-item key="/home">
-          <user-outlined />
+
+        <template v-for="item in routes" :key="item.path">
+
+          <a-menu-item v-if="item.children?.length === 0" :key="item.path">
+            <Icon :icon="item.meta!.icon" />
+            <span>{{ item.meta!.title }}</span>
+          </a-menu-item>
+
+        </template>
+
+        <!-- <a-menu-item key="/home">
+          <Icon icon="UserOutlined" />
           <span>首页</span>
         </a-menu-item>
 
@@ -37,13 +47,14 @@
           <a-menu-item key="/option2">Option 2</a-menu-item>
           <a-menu-item key="/option3">Option 3</a-menu-item>
           <a-menu-item key="/option4">Option 4</a-menu-item>
-        </a-sub-menu>
+        </a-sub-menu> -->
+
       </a-menu>
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <menu-unfold-outlined v-if="collapsed" class="trigger" @click="() => (collapsed = !collapsed)" />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
+        <Icon icon="MenuUnfoldOutlined" v-if="state.collapsed" class="trigger" @click="() => (state.collapsed = !state.collapsed)" />
+        <Icon icon="MenuUnfoldOutlined" v-else class="trigger" @click="() => (state.collapsed = !state.collapsed)" />
       </a-layout-header>
       <a-layout-content :style="{
         margin: '24px 16px',
@@ -57,58 +68,44 @@
     </a-layout>
   </a-layout>
 </template>
-<script lang="ts">
-import {
-  UserOutlined,
-  UploadOutlined,
-  MenuUnfoldOutlined,
-  MenuFoldOutlined,
-  MailOutlined
-} from '@ant-design/icons-vue'
-import { defineComponent, reactive, ref, toRefs } from 'vue'
+<script setup lang="ts">
+import { Icon } from '@/util/icon'
+import { reactive, ref, toRefs } from 'vue'
 import router from '../router'
+import store from '@/store'
+import { RouteRecordRaw } from 'vue-router'
 
-export default defineComponent({
-  components: {
-    UserOutlined,
-    UploadOutlined,
-    MenuUnfoldOutlined,
-    MenuFoldOutlined,
-    MailOutlined
-  },
-  setup () {
-    const state = reactive({
-      rootSubmenuKeys: ref<string[]>(['sub1', 'sub2']), // 菜单节点
-      openKeys: ref<string[]>([]), // 当前打开的菜单
-      selectedKeys: ref<string[]>(['/home']), // 当前选中的选项
-      collapsed: ref<boolean>(false) // 侧边栏是否隐藏
-    })
+// 当前需要添加的路由
+const routes:RouteRecordRaw[] = store.getters.getCurrentRouter[0].children ? store.getters.getCurrentRouter[0].children : []
+console.log(routes)
 
-    // 修改展开的菜单
-    const onOpenChange = (openKeys: string[]) => {
-      const latestOpenKey = openKeys.find(
-        (key) => state.openKeys.indexOf(key) === -1
-      )
-      if (state.rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
-        state.openKeys = openKeys
-      } else {
-        state.openKeys = latestOpenKey ? [latestOpenKey] : []
-      }
-    }
-
-    const itemClick = (item: any) => {
-      console.log(item.key)
-      router.replace(item.key)
-    }
-
-    return {
-      ...toRefs(state),
-      onOpenChange,
-      itemClick
-    }
-  }
+// 菜单状态
+const state = reactive({
+  rootSubmenuKeys: ref<string[]>(['sub1', 'sub2']), // 菜单节点
+  openKeys: ref<string[]>([]), // 当前打开的菜单
+  selectedKeys: ref<string[]>(['/home']), // 当前选中的选项
+  collapsed: ref<boolean>(false) // 侧边栏是否隐藏
 })
+
+// 修改展开的菜单
+const onOpenChange = (openKeys: string[]) => {
+  const latestOpenKey = openKeys.find(
+    (key) => state.openKeys.indexOf(key) === -1
+  )
+  if (state.rootSubmenuKeys.indexOf(latestOpenKey!) === -1) {
+    state.openKeys = openKeys
+  } else {
+    state.openKeys = latestOpenKey ? [latestOpenKey] : []
+  }
+}
+
+// 点击菜单
+const itemClick = (item: any) => {
+  console.log(item.key)
+  router.replace(item.key)
+}
 </script>
+
 <style>
 .trigger {
   font-size: 18px;

@@ -36,11 +36,45 @@ export const asyncRoutes: Array<RouteRecordRaw> = [
     children: [
       {
         path: '/home',
-        component: () => import('@/views/home/HomeIndex.vue')
+        component: () => import('@/views/home/HomeIndex.vue'),
+        meta: {
+          title: '首页',
+          icon: 'UserOutlined'
+        }
       },
       {
-        path: '/config/userConfig',
-        component: () => import('@/views/home/sysConfig/UserConfig.vue')
+        path: '/config',
+        redirect: '/config/user',
+        meta: {
+          title: '系统设置',
+          icon: 'UserOutlined'
+        },
+        children: [
+          {
+            path: '/config/user',
+            component: () => import('@/views/home/HomeIndex.vue'),
+            meta: {
+              title: '用户管理',
+              icon: 'UserOutlined'
+            }
+          },
+          {
+            path: '/config/role',
+            component: () => import('@/views/home/HomeIndex.vue'),
+            meta: {
+              title: '角色管理',
+              icon: 'UserOutlined'
+            }
+          },
+          {
+            path:'/config/permission',
+            component: () => import('@/views/home/HomeIndex.vue'),
+            meta: {
+              title: '权限管理',
+              icon: 'UserOutlined'
+            }
+          }
+        ]
       }
     ]
   }

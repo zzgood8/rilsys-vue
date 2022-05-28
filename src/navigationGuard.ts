@@ -66,7 +66,9 @@ router.beforeEach(async (to, from, next) => {
 
 // 添加路由
 const addRouter = () => {
-  filterRouter(asyncRoutes, store.getters.getAuthority).forEach(item => {
+  const match = filterRouter(asyncRoutes, store.getters.getAuthority)
+  store.commit('setCurrentRouter', match)
+  match.forEach(item => {
     router.addRoute(item)
   })
   router.addRoute({

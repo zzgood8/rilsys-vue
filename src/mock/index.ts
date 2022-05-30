@@ -21,4 +21,20 @@ Mock.mock('http://localhost:8888/api/systemUser/getPermission', 'get', {
   ]
 })
 
+// 获取当前用户的权限
+Mock.mock('http://localhost:8888/api/workLog/getByMonth', 'get', {
+  code: 200,
+  msg: 'ok',
+  'data|1-30': [{
+    'id|+1': 1,
+    'title|1': ['添加报价', '联思问题处理', '添加报表', '稍后待做'],
+    'type|1': ['1', '2', '3', '4'],
+    content: '@cparagraph()',
+    createTime: '@datetime("2022-05-dd HH:mm:ss")',
+    createBy: 'zbx',
+    updateTime: null,
+    updateBy: null
+  }]
+})
+
 export default Mock

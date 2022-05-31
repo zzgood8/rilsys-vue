@@ -1,8 +1,9 @@
 <template>
   <div style="text-align: center;">
     <a-card title="用户登录" class="login-card">
-      <a-form :model="formState" labelAlign="left" :labelCol="{ span: 6 }" name="normal_login" class="login-form"
-        @finish="onFinish" @finishFailed="onFinishFailed">
+      <a-form :model="formState" labelAlign="left" :labelCol="{ span: 6 }"
+        @finish="onFinish">
+
         <a-form-item label="用户名:" name="username" :rules="[{ required: true, message: '请输入用户名!' }]">
           <a-input v-model:value="formState.username">
             <template #prefix>
@@ -25,33 +26,41 @@
             {{ formState.loginState ? '登录中' : '登录' }}
           </a-button>
         </a-form-item>
+
       </a-form>
     </a-card>
   </div>
 </template>
+
 <script setup lang="ts">
 import { reactive, computed } from 'vue'
+import { message } from 'ant-design-vue'
 import { UserOutlined, LockOutlined } from '@ant-design/icons-vue'
 import { apiLogin } from '@/api/user'
 import router from '@/router'
 
-interface FormState {
-  username: string;
-  password: string;
-  loginState: boolean
-}
-
-const formState = reactive<FormState>({
+// 登录表单
+const formState = reactive({
   username: '',
   password: '',
   loginState: false
 })
 
+// 登录按钮是否禁用
+const disabled = computed(() => {
+  return !(formState.username && formState.password)
+})
+
+// 表单提交触发
 const onFinish = (values: any) => {
   formState.loginState = true
   apiLogin(values).then(res => {
-    localStorage.setItem('token', res.data.data)
-    router.replace('/home')
+    if (res.data.code === 200) {
+      localStorage.setItem('token', res.data.data)
+      router.replace('/home')
+    } else {
+      message.error(`${res.data.msg}\n${res.data.data}}`)
+    }
   }).catch(err => {
     console.log(err)
   }).finally(() => {
@@ -60,13 +69,6 @@ const onFinish = (values: any) => {
   })
 }
 
-const onFinishFailed = (errorInfo: any) => {
-  console.log('Failed:', errorInfo)
-}
-
-const disabled = computed(() => {
-  return !(formState.username && formState.password)
-})
 </script>
 
 <style>

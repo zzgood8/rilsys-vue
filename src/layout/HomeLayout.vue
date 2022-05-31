@@ -6,49 +6,11 @@
         theme="dark" mode="inline">
 
         <template v-for="item in routes" :key="item.path">
-
           <a-menu-item v-if="item.children?.length === 0" :key="item.path">
             <Icon :icon="item.meta!.icon" />
             <span>{{ item.meta!.title }}</span>
           </a-menu-item>
-
         </template>
-
-        <!-- <a-menu-item key="/home">
-          <Icon icon="UserOutlined" />
-          <span>首页</span>
-        </a-menu-item>
-
-        <a-sub-menu key="sub1">
-          <template #icon>
-            <MailOutlined />
-          </template>
-          <template #title>华广相关</template>
-          <a-menu-item key="/option5">Option 5</a-menu-item>
-          <a-menu-item key="/option6">Option 6</a-menu-item>
-          <a-menu-item key="/option7">Option 7</a-menu-item>
-          <a-menu-item key="/option8">Option 8</a-menu-item>
-        </a-sub-menu>
-
-        <a-menu-item key="/liansi">
-          <upload-outlined />
-          <span>联思相关</span>
-        </a-menu-item>
-        <a-menu-item key="/about">
-          <upload-outlined />
-          <span>权限管理</span>
-        </a-menu-item>
-        <a-sub-menu key="sub2">
-          <template #icon>
-            <MailOutlined />
-          </template>
-          <template #title>系统设置</template>
-          <a-menu-item key="/option1">Option 1</a-menu-item>
-          <a-menu-item key="/option2">Option 2</a-menu-item>
-          <a-menu-item key="/option3">Option 3</a-menu-item>
-          <a-menu-item key="/option4">Option 4</a-menu-item>
-        </a-sub-menu> -->
-
       </a-menu>
     </a-layout-sider>
     <a-layout>
